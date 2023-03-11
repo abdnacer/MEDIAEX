@@ -1,8 +1,9 @@
 import * as React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Home from './Home';
 import GetStarted from '../screens/GetStarted/GetStarted';
+import Home from '../screens/Home/Home';
+import Ionic from "react-native-vector-icons"
 
 const Stack = createNativeStackNavigator();
 
@@ -24,7 +25,7 @@ const Router = () => {
         component={GetStarted}
         options={{headerShown: false}}
       />
-      <Stack.Screen name="MainApp" component={MainApp} />
+      <Stack.Screen name="MainApp" component={MainApp} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 };
