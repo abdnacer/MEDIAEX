@@ -3,7 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import GetStarted from '../screens/GetStarted/GetStarted';
 import Home from '../screens/Home/Home';
-import Ionic from "react-native-vector-icons"
+import Favorite from '../screens/Favorite/Favorite';
 
 const Stack = createNativeStackNavigator();
 
@@ -11,8 +11,9 @@ const Tab = createBottomTabNavigator();
 
 const MainApp = () => {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={Home} options={{headerShown: false}} />
+    <Tab.Navigator screenOptions={{headerShown: false}}>
+      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Favorite" component={Favorite} />
     </Tab.Navigator>
   );
 };
