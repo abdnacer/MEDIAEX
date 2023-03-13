@@ -4,6 +4,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import GetStarted from '../screens/GetStarted/GetStarted';
 import Home from '../screens/Home/Home';
 import Favorite from '../screens/Favorite/Favorite';
+import Details from '../screens/Details/Details';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +28,7 @@ const Router = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen name="MainApp" component={MainApp} options={{headerShown: false}} />
+      <Stack.Screen name="Details" component={Details} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 };
