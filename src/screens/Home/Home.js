@@ -15,46 +15,38 @@ import Header from '../../components/Header/Header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = ({navigation}) => {
-
-  const nameCategory = ["Science","Politics", "Health", "Food", "Business"]
+  const nameCategory = ['Science', 'Politics', 'Health', 'Food', 'Business'];
   const [dataNews, setDataNews] = useState([]);
-  const [savedNews, setSavedNews] = useState([]);
-
-  const getDataStorage = async () => {
-    try {
-      const value = await AsyncStorage.getItem('@Favorite');
-      if (value !== null) {
-        setSavedNews(JSON.parse(value));
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   const getDataNews = async () => {
     await axios
-      .get(`https://newsdata.io/api/1/news?apikey=${API_KEY}&country=ma&language=fr&category=business,food,health,politics,science`)
+      .get(
+        `https://newsdata.io/api/1/news?apikey=${API_KEY}&country=ma&language=fr&category=business,food,health,politics,science`,
+      )
       .then(res => {
         setDataNews(res.data.results);
+        // AsyncStorage.clear()
+        //   .then(() => {
+        //     console.log('AsyncStorage cleared successfully!');
+        //   })
+        //   .catch(error => {
+        //     console.log(`Error clearing AsyncStorage: ${error}`);
+        //   });
       })
       .catch(err => {
         console.log(err);
       });
   };
 
-  console.log(savedNews)
-
   useEffect(() => {
     getDataNews();
-    // retrieveData();
   }, []);
 
   return (
     <View>
       <Header home />
       <View style={styles.backgroundconainer}>
-        {/* <Text style={styles.Title}>Choose your News</Text> */}
-        <TouchableOpacity onPress={getDataStorage} style={styles.Title}><Text>Choose your News</Text></TouchableOpacity>
+        <Text style={styles.Title}>Choose your News</Text>
         <ScrollView horizontal={true} contentContainerStyle={{marginTop: 20}}>
           <View style={styles.ContainerCategorie}>
             {nameCategory.map((category, index) => {
@@ -70,9 +62,11 @@ const Home = ({navigation}) => {
           </View>
         </ScrollView>
       </View>
-      <ScrollView style={{backgroundColor: '#fff'}}>
+      <ScrollView style={{backgroundColor: '#fff', marginBottom: 100}}>
         {dataNews.map((news, index) => (
-          <TouchableOpacity key={index} onPress={() => navigation.navigate('Details', {news})}>
+          <TouchableOpacity
+            key={index}
+            onPress={() => navigation.navigate('Details', {news})}>
             <Card key={index} style={styles.containerCard}>
               <View style={{flexDirection: 'row'}}>
                 <View style={styles.title}>
@@ -109,35 +103,6 @@ const Home = ({navigation}) => {
 export default Home;
 
 const styles = StyleSheet.create({
-  itemContainer: {
-    marginTop: 20,
-    marginHorizontal: 10,
-    backgroundColor: '#FFE8E5',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 30,
-      height: 3,
-    },
-    shadowOpacity: 0.49,
-    shadowRadius: 5,
-    elevation: 7,
-  },
-  itemTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    margin: 10,
-    color: '#111',
-  },
-  itemSource: {
-    fontSize: 12,
-    color: 'black',
-    marginBottom: 5,
-  },
-  itemDescription: {
-    fontSize: 14,
-    color: 'black',
-  },
-
   backgroundconainer: {
     backgroundColor: '#fff',
   },
@@ -170,7 +135,7 @@ const styles = StyleSheet.create({
   },
   textPub: {
     marginTop: 10,
-    color: '#999'
+    color: '#999',
   },
 
   Categorie: {

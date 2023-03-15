@@ -3,7 +3,7 @@ import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import Back from '../../assets/icon/back.png';
 import {useNavigation} from '@react-navigation/native';
 
-const Header = ({details, home}) => {
+const Header = ({details, home, favorite}) => {
   const navigation = useNavigation();
 
   if (details) {
@@ -24,6 +24,13 @@ const Header = ({details, home}) => {
     return (
       <View style={styles.wrapperHeader}>
         <Text style={styles.textHeader}>Home</Text>
+      </View>
+    );
+  }
+  if(favorite){
+    return (
+      <View style={styles.wrapperHeader}>
+        <Text style={styles.textHeader}>Favorite</Text>
       </View>
     );
   }

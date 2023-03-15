@@ -13,27 +13,32 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Details = ({route}) => {
   const news = route.params;
-  const [dataFavorite, setDataFavorite] = useState([]);
+  // const [arrayStorage, setArrayStorage] = useState([]);
 
-  const [arrayStorage, setArrayStorage] = useState([]);
-
-  const handlePress = async () => {
-    setArrayStorage([...arrayStorage, news.news]);
-    await AsyncStorage.setItem('@Favorite', JSON.stringify(arrayStorage))
-      .then(() => {
-        console.log('Saved');
-        // console.log(arrayStorage);
+  const handlePress = () => {
+    AsyncStorage.getItem('@Favorite')
+    .then(res => {
+      const parsedNews = res ? JSON.parse(res) : []
+      const newsExsits = parsedNews.find(e => {
+        e.title === news.news.title
       })
-      .catch(err => console.log(err));
-  };
 
-
-  // const HandleSaveNews = async () => {
-  // };
-
-  // useEffect(() => {
-  //   HandleSaveNews()
-  // }, [])
+      if(!newsExsits){
+        parsedNews.push(news.news)
+        AsyncStorage.setItem('@Favorite', JSON.stringify(parsedNews))
+        .then(() => {
+          console.log('Saved')
+        })
+        .catch(err => console.log(err))
+      }
+      else{
+        console.log('Article already exists in favorites');
+      }
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
 
   return (
     <View>
@@ -43,7 +48,8 @@ const Details = ({route}) => {
         <View style={styles.containerDetails}>
           <View style={styles.saveNews}>
             <Text></Text>
-            <TouchableOpacity onPress={handlePress}>
+            <TouchableOpacity
+              onPress={handlePress}>
               <Text style={styles.titleSave}>Saved</Text>
             </TouchableOpacity>
           </View>
