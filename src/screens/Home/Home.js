@@ -12,16 +12,28 @@ import {API_KEY} from '@env';
 import {Card, Title, Paragraph, Chip} from 'react-native-paper';
 import axios from 'axios';
 import Header from '../../components/Header/Header';
-import Gap from '../../components/Gap/gap';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = ({navigation}) => {
+
+  const nameCategory = ["Science","Politics", "Health", "Food", "Business"]
   const [dataNews, setDataNews] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(false);
-  const testCategory = '';
+  const [savedNews, setSavedNews] = useState([]);
+
+  const getDataStorage = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@Favorite');
+      if (value !== null) {
+        setSavedNews(JSON.parse(value));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const getDataNews = async () => {
     await axios
-      .get(`https://newsdata.io/api/1/news?apikey=${API_KEY}&language=fr,en`)
+      .get(`https://newsdata.io/api/1/news?apikey=${API_KEY}&country=ma&language=fr&category=business,food,health,politics,science`)
       .then(res => {
         setDataNews(res.data.results);
       })
@@ -30,24 +42,28 @@ const Home = ({navigation}) => {
       });
   };
 
+  console.log(savedNews)
+
   useEffect(() => {
     getDataNews();
+    // retrieveData();
   }, []);
 
   return (
     <View>
-      <Header />
+      <Header home />
       <View style={styles.backgroundconainer}>
-        <Text style={styles.Title}>Choose your News</Text>
+        {/* <Text style={styles.Title}>Choose your News</Text> */}
+        <TouchableOpacity onPress={getDataStorage} style={styles.Title}><Text>Choose your News</Text></TouchableOpacity>
         <ScrollView horizontal={true} contentContainerStyle={{marginTop: 20}}>
           <View style={styles.ContainerCategorie}>
-            {dataNews.map((news, index) => {
+            {nameCategory.map((category, index) => {
               return (
                 <LinearGradient
                   key={index}
                   colors={['#000', '#000']}
                   style={styles.Categorie}>
-                  <Text style={styles.text}>{news.category}</Text>
+                  <Text style={styles.text}>{category}</Text>
                 </LinearGradient>
               );
             })}
@@ -56,8 +72,7 @@ const Home = ({navigation}) => {
       </View>
       <ScrollView style={{backgroundColor: '#fff'}}>
         {dataNews.map((news, index) => (
-          // 2eme Card
-          <TouchableOpacity onPress={() => navigation.navigate('Details', {news})}>
+          <TouchableOpacity key={index} onPress={() => navigation.navigate('Details', {news})}>
             <Card key={index} style={styles.containerCard}>
               <View style={{flexDirection: 'row'}}>
                 <View style={styles.title}>
@@ -82,8 +97,6 @@ const Home = ({navigation}) => {
               </View>
               <View style={{margin: 10}}>
                 <Paragraph>{news.description}</Paragraph>
-                <Text style={styles.textPub}>Published At: {news.pubDate}</Text>
-                <Text style={styles.textPub}>Creator By: {news.creator}</Text>
               </View>
             </Card>
           </TouchableOpacity>
